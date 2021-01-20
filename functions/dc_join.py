@@ -14,11 +14,28 @@ def dc_join(db='ufrn_wait',dc='turmas',num=[],**kwargs):
     db_folder     = db_folder_fcn(db,dc)
 
     db_folders = os.listdir(db_folder)
-    dc_folders = [db_folder+'/'+folder for folder in db_folders if re.findall(dc,folder)]
-    dc_files = [dc_folder+'/'+dc_file for dc_folder in dc_folders for dc_file in os.listdir(dc_folder)]
-    csv_files = [dc_file for dc_file in dc_files if dc_file.endswith('.csv')]
+    
+    dc_folders = [
+        db_folder+'/'+folder
+        for folder in db_folders
+        if re.findall(dc,folder)
+    ]
+    
+    dc_files = [
+        dc_folder+'/'+dc_file
+        for dc_folder in dc_folders
+        for dc_file in os.listdir(dc_folder)
+    ]
+    
+    csv_files = [
+        dc_file
+        for dc_file in dc_files
+        if dc_file.endswith('.csv')
+    ]
 
     dc_data = pd.concat([pd.read_csv(csv,sep=';') for csv in csv_files], ignore_index=ignore_index)
+    
+    dc_data = dc_data[~dc_data.duplicated()]
     
     dc = re.sub('[^\w]','',dc)
     dbc = db+'/'+dc
