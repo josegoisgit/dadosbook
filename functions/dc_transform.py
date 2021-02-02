@@ -1,3 +1,5 @@
+# %%writefile /dev/notebook/dc_transform.py
+# %load /dev/notebook/dc_transform.py
 def dc_transform (db = 'ufrn_wait',dc = 'turmas', key_types={}):
     dbc = db+'/'+dc
     dc_data = dc_join.dict[dbc]['data']

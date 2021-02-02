@@ -1,5 +1,6 @@
+#%%writefile /dev/source/dadosbook/functions/dc_join.py
 # %load /dev/notebook/dc_join.py
-def dc_join(db='ufrn_wait',dc='turmas',num=[],**kwargs):
+def dc_join(db='ufrn_wait', dc='turmas', num=[], data_folder='/home/josegois/data', **kwargs):
 
     import re
 
@@ -10,7 +11,7 @@ def dc_join(db='ufrn_wait',dc='turmas',num=[],**kwargs):
     if not 'ignore_index' in kwargs:
         ignore_index = True
 
-    db_folder_fcn = lambda db,dc : '/data/%s' % (db)
+    db_folder_fcn = lambda db,dc : '%s/%s' % (data_folder,db)
     db_folder     = db_folder_fcn(db,dc)
 
     db_folders = os.listdir(db_folder)
@@ -35,7 +36,7 @@ def dc_join(db='ufrn_wait',dc='turmas',num=[],**kwargs):
 
     dc_data = pd.concat([pd.read_csv(csv,sep=';') for csv in csv_files], ignore_index=ignore_index)
     
-    dc_data = dc_data[~dc_data.duplicated()]
+    dc_data = dc_data[~dc_data.duplicated()].reset_index()
     
     dc = re.sub('[^\w]','',dc)
     dbc = db+'/'+dc
